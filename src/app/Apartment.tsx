@@ -8,6 +8,7 @@ import {
   XRFrame,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import Origin from "./objects/Origin";
 
 import Room from "./objects/Room";
 
@@ -34,6 +35,7 @@ const Apartment: React.FunctionComponent<unknown> = () => {
   const [renderer] = React.useState<WebGL1Renderer>(
     new WebGL1Renderer({ alpha: true, antialias: true })
   );
+  const [origin] = React.useState<Origin>(new Origin({}));
   const [orbitControls] = React.useState<OrbitControls>(
     new OrbitControls(camera, renderer.domElement)
   );
@@ -50,6 +52,9 @@ const Apartment: React.FunctionComponent<unknown> = () => {
     // * Add objects to scene
     scene.add(directionalLight);
     scene.add(ambientLight);
+
+    // * Origin
+    scene.add(origin.object);
 
     // * North Side = 329 inches
     // * East Side = 310 inches
