@@ -1,9 +1,9 @@
 import * as React from "react";
 
-import LivingRoom from "./LivingRoom";
+import Apartment from "./Apartment";
 
 const App: React.FunctionComponent<unknown> = () => {
-  return <LivingRoom />;
+  return <Apartment />;
 };
 
 export default App;

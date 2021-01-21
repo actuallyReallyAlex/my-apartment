@@ -1,7 +1,7 @@
 {
-  "name": "my-livingroom",
+  "name": "my-apartment",
   "version": "0.0.0",
-  "description": "A learning experience with 3D Rendering. Can I Make This? My Livingroom.",
+  "description": "A learning experience with 3D Rendering. Can I Make This? My Apartment.",
   "main": "build/index.js",
   "scripts": {
     "build-game": "webpack",
@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexlee-dev/my-livingroom.git"
+    "url": "git+https://github.com/alexlee-dev/my-apartment.git"
   },
   "author": "Alex Lee (www.alexlee.dev)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/alexlee-dev/my-livingroom/issues"
+    "url": "https://github.com/alexlee-dev/my-apartment/issues"
   },
-  "homepage": "https://github.com/alexlee-dev/my-livingroom#readme",
+  "homepage": "https://github.com/alexlee-dev/my-apartment#readme",
   "dependencies": {
     "chalk": "^4.1.0",
     "cors": "^2.8.5",
