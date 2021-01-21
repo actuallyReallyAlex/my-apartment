@@ -4,7 +4,7 @@ import { Object3D } from "three";
 
 import { degreeToRadian } from "../util";
 
-import { Coordinate, Rotation, WallProps } from "../../types";
+import { Coordinate3D, Rotation, WallProps } from "../../types";
 
 class Wall extends React.Component<unknown, unknown> {
   constructor(props: WallProps) {
@@ -12,23 +12,26 @@ class Wall extends React.Component<unknown, unknown> {
     this.object = new THREE.Object3D();
     this.center = props.center;
     this.color = props.color || "grey";
-    this.name = props.name;
+    this.name = props.name || "wall";
     this.rotation = props.rotation;
     this.width = props.width;
     this.init();
   }
 
-  center: Coordinate;
+  center: Coordinate3D;
   color: string;
-  name?: string;
+  name: string;
   object: Object3D;
   rotation: Rotation;
   width: number;
 
   init(): void {
+    // * Name
+    this.object.name = this.name;
+
     // * 1 unit === 1 inch
     const geometry = new THREE.BoxGeometry(this.width, 96, 4.5);
-    const material = new THREE.MeshPhongMaterial({ color: this.color });
+    const material = new THREE.MeshStandardMaterial({ color: this.color });
     const mesh = new THREE.Mesh(geometry, material);
 
     this.object.add(mesh);
