@@ -2,7 +2,6 @@ import * as React from "react";
 import {
   AmbientLight,
   DirectionalLight,
-  Object3D,
   PerspectiveCamera,
   Scene,
   WebGL1Renderer,
@@ -10,7 +9,7 @@ import {
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-import Cube from "./objects/Cube";
+import Room from "./objects/Room";
 
 const LivingRoom: React.FunctionComponent<unknown> = () => {
   const height = window.innerHeight;
@@ -25,10 +24,6 @@ const LivingRoom: React.FunctionComponent<unknown> = () => {
   );
   const [camera] = React.useState<PerspectiveCamera>(
     new PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane)
-  );
-
-  const [cube] = React.useState<Object3D>(
-    new Cube({ x: 0, y: 0, z: 0 }).object
   );
   const [container, setContainer] = React.useState<HTMLDivElement | undefined>(
     undefined
@@ -55,10 +50,123 @@ const LivingRoom: React.FunctionComponent<unknown> = () => {
     // * Add objects to scene
     scene.add(directionalLight);
     scene.add(ambientLight);
-    scene.add(cube);
+
+    // * North Side = 329 inches
+    // * East Side = 310 inches
+
+    const rooms = [
+      new Room({
+        color: "yellow",
+        name: "kitchen",
+        walls: [
+          {
+            center: { x: -55.5, y: 0, z: 24 },
+            rotation: { x: 0, y: 0, z: 0 },
+            width: 111,
+          },
+          {
+            center: { x: -111, y: 0, z: 126 },
+            rotation: { x: 0, y: 90, z: 0 },
+            width: 204,
+          },
+          {
+            center: { x: -13, y: 0, z: 179.5 },
+            rotation: { x: 0, y: 90, z: 0 },
+            width: 97,
+          },
+        ],
+      }),
+      new Room({
+        color: "blue",
+        name: "livingroom",
+        walls: [
+          {
+            center: { x: 218, y: 0, z: 62.5 },
+            rotation: { x: 0, y: 90, z: 0 },
+            width: 173,
+          },
+          {
+            center: { x: 109, y: 0, z: -24 },
+            rotation: { x: 0, y: 0, z: 0 },
+            width: 218,
+          },
+          {
+            center: { x: 0, y: 0, z: 0 },
+            rotation: { x: 0, y: 90, z: 0 },
+            width: 48,
+          },
+        ],
+      }),
+      new Room({
+        color: "green",
+        name: "bedroom",
+        walls: [
+          {
+            center: { x: 107.5, y: 0, z: 286 },
+            rotation: { x: 0, y: 0, z: 0 },
+            width: 153,
+          },
+          {
+            center: { x: 31, y: 0, z: 217.5 },
+            rotation: { x: 0, y: 90, z: 0 },
+            width: 137,
+          },
+          {
+            center: { x: 124.5, y: 0, z: 149 },
+            rotation: { x: 0, y: 0, z: 0 },
+            width: 187,
+          },
+        ],
+      }),
+      new Room({
+        color: "purple",
+        name: "closet",
+        walls: [
+          {
+            center: { x: 218, y: 0, z: 217.5 },
+            rotation: { x: 0, y: 90, z: 0 },
+            width: 137,
+          },
+          {
+            center: { x: 184, y: 0, z: 217.5 },
+            rotation: { x: 0, y: 90, z: 0 },
+            width: 137,
+          },
+          {
+            center: { x: 201, y: 0, z: 286 },
+            rotation: { x: 0, y: 0, z: 0 },
+            width: 34,
+          },
+        ],
+      }),
+      new Room({
+        color: "pink",
+        name: "bathroom",
+        walls: [
+          {
+            center: { x: -111, y: 0, z: 256.5 },
+            rotation: { x: 0, y: 90, z: 0 },
+            width: 59,
+          },
+          {
+            center: { x: -40, y: 0, z: 286 },
+            rotation: { x: 0, y: 0, z: 0 },
+            width: 142,
+          },
+          {
+            center: { x: -40, y: 0, z: 228 },
+            rotation: { x: 0, y: 0, z: 0 },
+            width: 142,
+          },
+        ],
+      }),
+    ];
+
+    rooms.forEach((room) => scene.add(room.object));
 
     // * Position Camera
-    camera.position.set(0, 0, 10);
+    camera.position.set(0, 250, 500);
+    orbitControls.target.set(50, 0, 100);
 
     // * Listeners
     window.addEventListener(
@@ -76,8 +184,8 @@ const LivingRoom: React.FunctionComponent<unknown> = () => {
     renderer.setAnimationLoop((time: number, frame?: XRFrame) => {
       // * Runs n times per second (usually 60)
       // * This is framerate determined (I think)
-      renderer.render(scene, camera);
       orbitControls.update();
+      renderer.render(scene, camera);
     });
   }, []);
 
