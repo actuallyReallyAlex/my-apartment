@@ -177,8 +177,8 @@ const Apartment: React.FunctionComponent<unknown> = () => {
     rooms.forEach((room) => scene.add(room.object));
 
     // * Position Camera
-    camera.position.set(0, 250, 500);
-    orbitControls.target.set(50, 0, 100);
+    camera.position.set(0, 500, 0);
+    // orbitControls.target.set(50, 0, 100);
 
     // * Listeners
     window.addEventListener(
@@ -196,7 +196,7 @@ const Apartment: React.FunctionComponent<unknown> = () => {
     renderer.setAnimationLoop((time: number, frame?: XRFrame) => {
       // * Runs n times per second (usually 60)
       // * This is framerate determined (I think)
-      orbitControls.update();
+      // orbitControls.update();
       renderer.render(scene, camera);
     });
   }, []);
