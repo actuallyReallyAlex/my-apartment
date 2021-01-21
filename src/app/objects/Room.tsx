@@ -18,7 +18,11 @@ class Room extends React.Component<unknown, unknown> {
     this.name = props.name;
     this.walls = props.walls.map(
       (wallProp, i) =>
-        new Wall({ ...wallProp, color: this.color, name: `${this.name}-${i}` })
+        new Wall({
+          ...wallProp,
+          color: wallProp.color ? wallProp.color : this.color,
+          name: `${this.name}-${i}`,
+        })
     );
     this.init();
   }

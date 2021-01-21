@@ -4,13 +4,17 @@ import {
   DirectionalLight,
   PerspectiveCamera,
   Scene,
+  Vector3,
   WebGL1Renderer,
   XRFrame,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+
 import Origin from "./objects/Origin";
 
-import Room from "./objects/Room";
+import rooms from "./rooms";
+
+import { Coordinate3D } from "../types";
 
 const Apartment: React.FunctionComponent<unknown> = () => {
   const height = window.innerHeight;
@@ -26,6 +30,16 @@ const Apartment: React.FunctionComponent<unknown> = () => {
   const [camera] = React.useState<PerspectiveCamera>(
     new PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane)
   );
+  const [cameraPosition, setCameraPosition] = React.useState<Coordinate3D>({
+    x: 0,
+    y: 300,
+    z: 0,
+  });
+  const [cameraLookAt, setCameraLookAt] = React.useState<Coordinate3D>({
+    x: 0,
+    y: 0,
+    z: 0,
+  });
   const [container, setContainer] = React.useState<HTMLDivElement | undefined>(
     undefined
   );
@@ -39,6 +53,7 @@ const Apartment: React.FunctionComponent<unknown> = () => {
   const [orbitControls] = React.useState<OrbitControls>(
     new OrbitControls(camera, renderer.domElement)
   );
+  const [overheadView, setOverheadView] = React.useState<boolean>(false);
   const [scene] = React.useState<Scene>(new Scene());
 
   React.useEffect(() => {
@@ -56,134 +71,12 @@ const Apartment: React.FunctionComponent<unknown> = () => {
     // * Origin
     scene.add(origin.object);
 
-    // * North Side = 329 inches
-    // * East Side = 310 inches
-
-    const rooms = [
-      new Room({
-        color: "yellow",
-        floors: [],
-        name: "kitchen",
-        walls: [
-          {
-            center: { x: -55.5, y: 0, z: 24 },
-            rotation: { x: 0, y: 0, z: 0 },
-            width: 111,
-          },
-          {
-            center: { x: -111, y: 0, z: 126 },
-            rotation: { x: 0, y: 90, z: 0 },
-            width: 204,
-          },
-          {
-            center: { x: -13, y: 0, z: 179.5 },
-            rotation: { x: 0, y: 90, z: 0 },
-            width: 97,
-          },
-        ],
-      }),
-      new Room({
-        color: "blue",
-        floors: [
-          {
-            center: { x: 0, z: 0 },
-            color: 0x523b31,
-            height: 100,
-            width: 100,
-          },
-        ],
-        name: "livingroom",
-        walls: [
-          {
-            center: { x: 218, y: 0, z: 62.5 },
-            rotation: { x: 0, y: 90, z: 0 },
-            width: 173,
-          },
-          {
-            center: { x: 109, y: 0, z: -24 },
-            rotation: { x: 0, y: 0, z: 0 },
-            width: 218,
-          },
-          {
-            center: { x: 0, y: 0, z: 0 },
-            rotation: { x: 0, y: 90, z: 0 },
-            width: 48,
-          },
-        ],
-      }),
-      new Room({
-        color: "green",
-        floors: [],
-        name: "bedroom",
-        walls: [
-          {
-            center: { x: 107.5, y: 0, z: 286 },
-            rotation: { x: 0, y: 0, z: 0 },
-            width: 153,
-          },
-          {
-            center: { x: 31, y: 0, z: 217.5 },
-            rotation: { x: 0, y: 90, z: 0 },
-            width: 137,
-          },
-          {
-            center: { x: 124.5, y: 0, z: 149 },
-            rotation: { x: 0, y: 0, z: 0 },
-            width: 187,
-          },
-        ],
-      }),
-      new Room({
-        color: "purple",
-        floors: [],
-        name: "closet",
-        walls: [
-          {
-            center: { x: 218, y: 0, z: 217.5 },
-            rotation: { x: 0, y: 90, z: 0 },
-            width: 137,
-          },
-          {
-            center: { x: 184, y: 0, z: 217.5 },
-            rotation: { x: 0, y: 90, z: 0 },
-            width: 137,
-          },
-          {
-            center: { x: 201, y: 0, z: 286 },
-            rotation: { x: 0, y: 0, z: 0 },
-            width: 34,
-          },
-        ],
-      }),
-      new Room({
-        color: "pink",
-        floors: [],
-        name: "bathroom",
-        walls: [
-          {
-            center: { x: -111, y: 0, z: 256.5 },
-            rotation: { x: 0, y: 90, z: 0 },
-            width: 59,
-          },
-          {
-            center: { x: -40, y: 0, z: 286 },
-            rotation: { x: 0, y: 0, z: 0 },
-            width: 142,
-          },
-          {
-            center: { x: -40, y: 0, z: 228 },
-            rotation: { x: 0, y: 0, z: 0 },
-            width: 142,
-          },
-        ],
-      }),
-    ];
-
+    // * Rooms
     rooms.forEach((room) => scene.add(room.object));
 
     // * Position Camera
-    camera.position.set(0, 500, 0);
     // orbitControls.target.set(50, 0, 100);
+    camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
 
     // * Listeners
     window.addEventListener(
@@ -198,10 +91,26 @@ const Apartment: React.FunctionComponent<unknown> = () => {
       false
     );
 
+    setTimeout(() => {
+      setOverheadView(true);
+    }, 5000);
+
     renderer.setAnimationLoop((time: number, frame?: XRFrame) => {
+      // ! Issue - this doesn't have the state of <Apartment />
+      // ! When state changes, this function doesn't know about it
+      // ! I think this is why wonky stuff with the orbit controls were happening
       // * Runs n times per second (usually 60)
       // * This is framerate determined (I think)
       // orbitControls.update();
+      // if (overheadView) {
+      //   camera.lookAt(
+      //     new Vector3(cameraLookAt.x, cameraLookAt.y, cameraLookAt.z)
+      //   );
+      //   console.log("HERE 1");
+      // } else {
+      //   console.log("HERE 2");
+      // }
+
       renderer.render(scene, camera);
     });
   }, []);
