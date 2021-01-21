@@ -11,7 +11,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import Room from "./objects/Room";
 
-const LivingRoom: React.FunctionComponent<unknown> = () => {
+const Apartment: React.FunctionComponent<unknown> = () => {
   const height = window.innerHeight;
   const width = window.innerWidth;
   const aspectRatio = width / height;
@@ -207,4 +207,4 @@ const LivingRoom: React.FunctionComponent<unknown> = () => {
   );
 };
 
-export default LivingRoom;
+export default Apartment;
