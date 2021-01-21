@@ -2,21 +2,19 @@ import * as React from "react";
 import * as THREE from "three";
 import { Object3D } from "three";
 
+import Floor from "./Floor";
 import Wall from "./Wall";
 
-import { WallProps } from "../../types";
-
-interface RoomProps {
-  color?: string;
-  name: string;
-  walls: WallProps[];
-}
+import { RoomProps } from "../../types";
 
 class Room extends React.Component<unknown, unknown> {
   constructor(props: RoomProps) {
     super(props);
     this.object = new THREE.Object3D();
     this.color = props.color || "grey";
+    this.floors = props.floors.map(
+      (floorProp, i) => new Floor({ ...floorProp, name: `${this.name}-${i}` })
+    );
     this.name = props.name;
     this.walls = props.walls.map(
       (wallProp, i) =>
@@ -26,16 +24,25 @@ class Room extends React.Component<unknown, unknown> {
   }
 
   color?: string;
+  floors: Floor[];
   object: Object3D;
   name: string;
   walls: Wall[];
 
   init(): void {
+    // * Name of Room
+    this.object.name = this.name;
+
+    // * Walls
     this.walls.forEach((wall) => {
-      wall.object;
       this.object.add(wall.object);
     });
-    this.object.name = this.name;
+
+    // * Floor
+    // * Assemble rectangles of floor together to make 1 big floor
+    this.floors.forEach((floor) => {
+      this.object.add(floor.object);
+    });
   }
 }
 

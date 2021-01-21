@@ -57,6 +57,7 @@ const Apartment: React.FunctionComponent<unknown> = () => {
     const rooms = [
       new Room({
         color: "yellow",
+        floors: [],
         name: "kitchen",
         walls: [
           {
@@ -78,6 +79,14 @@ const Apartment: React.FunctionComponent<unknown> = () => {
       }),
       new Room({
         color: "blue",
+        floors: [
+          {
+            center: { x: 0, z: 0 },
+            color: 0x523b31,
+            height: 100,
+            width: 100,
+          },
+        ],
         name: "livingroom",
         walls: [
           {
@@ -99,6 +108,7 @@ const Apartment: React.FunctionComponent<unknown> = () => {
       }),
       new Room({
         color: "green",
+        floors: [],
         name: "bedroom",
         walls: [
           {
@@ -120,6 +130,7 @@ const Apartment: React.FunctionComponent<unknown> = () => {
       }),
       new Room({
         color: "purple",
+        floors: [],
         name: "closet",
         walls: [
           {
@@ -141,6 +152,7 @@ const Apartment: React.FunctionComponent<unknown> = () => {
       }),
       new Room({
         color: "pink",
+        floors: [],
         name: "bathroom",
         walls: [
           {
